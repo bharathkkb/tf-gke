@@ -20,4 +20,12 @@ terraform {
   required_providers {
     google = ">= 3.39.0, <4.0.0"
   }
+  
+  provider_meta "google" {
+    module_name = "foo/bar/baz/v1.0.0"
+  }
+
+  provider_meta "google_beta" {
+    module_name = "foo/bar/baz/v1.0.0"
+  }
 }
