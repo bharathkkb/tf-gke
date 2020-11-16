@@ -15,6 +15,7 @@
  */
 
 // This file was automatically generated from a template in ./autogen/main
+// test
 
 /******************************************
   Get available zones in region
