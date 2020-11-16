@@ -6,6 +6,127 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Extending the adopted spec, each change should have a link to its corresponding pull request appended.
 
+## 0.1.0 (2020-11-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* GKE Hub functionality has been removed from ASM module(#665). Users can leverage Hub module for this functionality.
+* In-cluster resources have been updated to use the [kubectl wrapper](https://github.com/terraform-google-modules/terraform-google-gcloud/tree/master/modules/kubectl-wrapper) module. See the upgrade guide for details.
+* The default machine type has been changed to `e2-medium`. If you want the old default, you should specify it explicitly: `machine_type = "n1-standard-2"`.
+* Pod security policy enablement has been changed to use a simple boolean flag (`var. enable_pod_security_policy`)
+* Beta clusters have changed the default to use the GKE_METADATA_SERVER, to use the old option set `node_metadata = "SECURE"`.
+* Minimum provider change increased to 3.19.
+* The ACM module has been refactored and resources will be recreated. This will show up in Terraform plans but is a safe no-op for Kubernetes.
+* Minimum Google provider version increased to 3.16.
+* For the safer cluster module, you must now specify `release_channel` instead of `kubernetes_version`.
+* Beta clusters now have Workload Identity enabled by default. To disable Workload Identity, set `identity_namespace = null`
+* Beta clusters now have shielded nodes enabled by default. To disable, set `enable_shielded_nodes = false`.
+* Minimum beta provider version increased to 3.1 to allow surge upgrades.
+* beta clusters now have surge upgrades turned on by default. This behavior can be tuned using the max_surge and max_unavailable inputs.
+* moves node pool state location to allow using for_each on them
+
+### Features
+
+* [safer-cluster] Replace "kubernetes_version" with "release_channel" ([#487](https://www.github.com/bharathkkb/tf-gke/issues/487)) ([5791ac1](https://www.github.com/bharathkkb/tf-gke/commit/5791ac1f64cbd9355a9e2ee96f29d1c5b8686d60))
+* ACM - Wait for gatekeeper & Hub: expose module_depends_on ([#689](https://www.github.com/bharathkkb/tf-gke/issues/689)) ([26ea28d](https://www.github.com/bharathkkb/tf-gke/commit/26ea28db52ce5797da043a1c56dfb4575f49dac8))
+* Add a service activation module ([#146](https://www.github.com/bharathkkb/tf-gke/issues/146)) ([658ea51](https://www.github.com/bharathkkb/tf-gke/commit/658ea516965b18d7c161f89ede32b29e6113fd00))
+* Add an `auth` submodule outputting a `kubeconfig` ([#469](https://www.github.com/bharathkkb/tf-gke/issues/469)) ([a5ace36](https://www.github.com/bharathkkb/tf-gke/commit/a5ace360e42ff393a4d49c5018c7ea947b322404))
+* Add ASM install submodule ([#538](https://www.github.com/bharathkkb/tf-gke/issues/538)) ([6ff27f9](https://www.github.com/bharathkkb/tf-gke/commit/6ff27f9da146f8d0d37c8d536b863369bc82d4ab))
+* Add Beta Public Module Update Variant ([#546](https://www.github.com/bharathkkb/tf-gke/issues/546)) ([d9f1ea8](https://www.github.com/bharathkkb/tf-gke/commit/d9f1ea8b50caef249a25a73cd59b9a22183c2922))
+* Add bool option for automount_service_account_token ([#571](https://www.github.com/bharathkkb/tf-gke/issues/571)) ([002cfb1](https://www.github.com/bharathkkb/tf-gke/commit/002cfb1a6f2214092adf066611b9be481d066b17))
+* Add boot disk kms key variable ([#516](https://www.github.com/bharathkkb/tf-gke/issues/516)) ([9195f0f](https://www.github.com/bharathkkb/tf-gke/commit/9195f0fee88a1a58880a5cb768c76acc15c3ee33))
+* Add cluster_telemetry var to beta submodules ([#728](https://www.github.com/bharathkkb/tf-gke/issues/728)) ([e8291f0](https://www.github.com/bharathkkb/tf-gke/commit/e8291f03a1a91c43425177151c8e78d218eed2f1))
+* Add config sync module ([#493](https://www.github.com/bharathkkb/tf-gke/issues/493)) ([c090d5b](https://www.github.com/bharathkkb/tf-gke/commit/c090d5bd97e954562f5a1f94227e7b9e21724d4b))
+* Add ConfigConnector configuration option (beta) ([#547](https://www.github.com/bharathkkb/tf-gke/issues/547)) ([672adf9](https://www.github.com/bharathkkb/tf-gke/commit/672adf9a94089d2c9dcdd5d2666fcd5a8b4875c3))
+* add configconnector to safer variant ([#581](https://www.github.com/bharathkkb/tf-gke/issues/581)) ([4b3f609](https://www.github.com/bharathkkb/tf-gke/commit/4b3f60985ac90265c79a4c5378f8a688f642de96))
+* Add enable_kubernetes_alpha flag for beta clusters ([#437](https://www.github.com/bharathkkb/tf-gke/issues/437)) ([f6f7370](https://www.github.com/bharathkkb/tf-gke/commit/f6f7370a1f8a97604ba5613e40607345d7bc519f))
+* Add firewall support safer-cluster modules ([#570](https://www.github.com/bharathkkb/tf-gke/issues/570)) ([7ce3c49](https://www.github.com/bharathkkb/tf-gke/commit/7ce3c497e4c6ddaf2da393d03d82b7f43ab329ee))
+* Add fully configurable resource usage export block in GA and upgrade GCP provider ([#491](https://www.github.com/bharathkkb/tf-gke/issues/491)) ([54eca6b](https://www.github.com/bharathkkb/tf-gke/commit/54eca6b6469517495711c54dab3413003a58a410))
+* Add GCE PD CSI Driver beta support ([#497](https://www.github.com/bharathkkb/tf-gke/issues/497)) ([d96afa7](https://www.github.com/bharathkkb/tf-gke/commit/d96afa79fa97f88e8866b54c46c253efd9481ec5))
+* Add master_ipv4_cidr_block output for private clusters ([#427](https://www.github.com/bharathkkb/tf-gke/issues/427)) ([2cc64c8](https://www.github.com/bharathkkb/tf-gke/commit/2cc64c8d1e2384ec72f92589c76f5efe378b479d))
+* Add new Workload identity [submodule](./modules/workload-identity) ([#417](https://www.github.com/bharathkkb/tf-gke/issues/417)) ([b4bcfb9](https://www.github.com/bharathkkb/tf-gke/commit/b4bcfb9dd45d5f338b8b8366e7a6fc996c1973ae))
+* add node_pool_taints to all the modules ([#705](https://www.github.com/bharathkkb/tf-gke/issues/705)) ([68e8eec](https://www.github.com/bharathkkb/tf-gke/commit/68e8eecaec2d31d19924dec6b4dabc56e2010f0e))
+* Add peering_name output for private clusters and increase minimum provider version to 3.14 ([#484](https://www.github.com/bharathkkb/tf-gke/issues/484)) ([ff6b5cc](https://www.github.com/bharathkkb/tf-gke/commit/ff6b5cc24f47b292a4a7a89eda75bb9ffe8ea411))
+* Add submodule for creating a binary authentication attestor ([#530](https://www.github.com/bharathkkb/tf-gke/issues/530)) ([cc30fbb](https://www.github.com/bharathkkb/tf-gke/commit/cc30fbbbbcf232c6535156f1e596995e1bd2dcaf))
+* Add support for Cloud Run load balancer configuration ([#740](https://www.github.com/bharathkkb/tf-gke/issues/740)) ([685a2db](https://www.github.com/bharathkkb/tf-gke/commit/685a2db99f5943c2f74f931cde6923e596896d02))
+* Add support for enabling master_global_access, which is turned on by default. ([#601](https://www.github.com/bharathkkb/tf-gke/issues/601)) ([8a9f904](https://www.github.com/bharathkkb/tf-gke/commit/8a9f9041c8f18ff7a873873e9b19e03dcdfe7d2a))
+* Add support for enabling Nodelocal dns cache (var.dns_cache) ([#477](https://www.github.com/bharathkkb/tf-gke/issues/477)) ([de8e1d5](https://www.github.com/bharathkkb/tf-gke/commit/de8e1d5bdedd22533abcfd11660eb64a5a55f804))
+* Add support for KALM config ([#528](https://www.github.com/bharathkkb/tf-gke/issues/528)) ([6bf1178](https://www.github.com/bharathkkb/tf-gke/commit/6bf1178e3b367a6cc5b9d22adadeb18d1569aff7))
+* Add support for setting firewall rules ([#470](https://www.github.com/bharathkkb/tf-gke/issues/470)) ([16bdd6e](https://www.github.com/bharathkkb/tf-gke/commit/16bdd6e6310ae248991462494f50876b99a36bbe))
+* Add support for setting var.istio_auth ([#462](https://www.github.com/bharathkkb/tf-gke/issues/462)) ([fff4272](https://www.github.com/bharathkkb/tf-gke/commit/fff4272b31641814ede6d64d66673060f5daa027))
+* Add variable disable_default_snat ([#625](https://www.github.com/bharathkkb/tf-gke/issues/625)) ([19a9e9c](https://www.github.com/bharathkkb/tf-gke/commit/19a9e9c57b94d1332867a6c29b052e99785e2820))
+* Added an alternative [update variant](./modules/safer-cluster-update-variant) for the Safer Cluster module. [#378](https://www.github.com/bharathkkb/tf-gke/issues/378) ([65071ef](https://www.github.com/bharathkkb/tf-gke/commit/65071efd1665339b822b12a15f14820bcb629d0b))
+* Added support for specifying autoscaling_profile in var.cluster_autoscaling ([#456](https://www.github.com/bharathkkb/tf-gke/issues/456)) ([1ac2c5c](https://www.github.com/bharathkkb/tf-gke/commit/1ac2c5c1a090eeb8cd07f88902770637378d1ec8))
+* Added variable for service dependency in binary_authorization sub module ([#584](https://www.github.com/bharathkkb/tf-gke/issues/584)) ([e3e5458](https://www.github.com/bharathkkb/tf-gke/commit/e3e5458106bce5e3cc9995c2bc630f476439f71a))
+* allow passing roles to created Workload Identity service account ([#708](https://www.github.com/bharathkkb/tf-gke/issues/708)) ([e761dce](https://www.github.com/bharathkkb/tf-gke/commit/e761dcebbe43673842e7f955efcf2cc49e4572fd))
+* Allow user to customize ASM install with different directories and versions ([#620](https://www.github.com/bharathkkb/tf-gke/issues/620)) ([d542c5c](https://www.github.com/bharathkkb/tf-gke/commit/d542c5cc99bf8b47d82c320ad6c9853cfbb1e11c))
+* Allow workload identity submodule to update existing k8s SA. ([#430](https://www.github.com/bharathkkb/tf-gke/issues/430)) ([51fba38](https://www.github.com/bharathkkb/tf-gke/commit/51fba381e67bae686bd709fa2ffaf9d4377866f1))
+* Changed default node pool machine type to e2-medium ([#597](https://www.github.com/bharathkkb/tf-gke/issues/597)) ([1de41ef](https://www.github.com/bharathkkb/tf-gke/commit/1de41efafaee7abafbb6b83dc0cb687306bb4d87))
+* Enable GKE_METADATA_SERVER as default node_metadata for beta-clusters ([#490](https://www.github.com/bharathkkb/tf-gke/issues/490)) ([#512](https://www.github.com/bharathkkb/tf-gke/issues/512)) ([8e14762](https://www.github.com/bharathkkb/tf-gke/commit/8e147627ad53f6a169b38dbd2797bd55a4792c5d))
+* Enable Surge Upgrades by specifying max_surge and max_unavailable (Beta) ([#394](https://www.github.com/bharathkkb/tf-gke/issues/394)) ([e4abe78](https://www.github.com/bharathkkb/tf-gke/commit/e4abe78279ef100aeb6e4ddc0bde58cabc90acc0))
+* Enable WI and shielded nodes by default in beta clusters ([#441](https://www.github.com/bharathkkb/tf-gke/issues/441)) ([704962b](https://www.github.com/bharathkkb/tf-gke/commit/704962b1b5408bed8e4102df198eb843b7e8d1d1))
+* Expose gce_pd_csi_driver for Safer Cluster modules [#503](https://www.github.com/bharathkkb/tf-gke/issues/503) ([#514](https://www.github.com/bharathkkb/tf-gke/issues/514)) ([d4e7dc6](https://www.github.com/bharathkkb/tf-gke/commit/d4e7dc6a585770474ea4cdee3452cf98b404c6e2))
+* Expose service account variable on ASM submodule ([#658](https://www.github.com/bharathkkb/tf-gke/issues/658)) ([182dded](https://www.github.com/bharathkkb/tf-gke/commit/182dded476ddd8eb6f95a800f7a5bb6541c9fcbe))
+* Expose the grant_registry_access variable in safer-cluster ([#509](https://www.github.com/bharathkkb/tf-gke/issues/509)) ([0961613](https://www.github.com/bharathkkb/tf-gke/commit/0961613d7e8be391422e5a411801e2737280c2c3))
+* hub make decode work with -d or --decode ([#671](https://www.github.com/bharathkkb/tf-gke/issues/671)) ([0b5bd3d](https://www.github.com/bharathkkb/tf-gke/commit/0b5bd3d7a1f079ab98bc294f64a4f6b27ee34fc7))
+* Hub submodule - add option to use existing service account to register clusters. ([#678](https://www.github.com/bharathkkb/tf-gke/issues/678)) ([9f84cec](https://www.github.com/bharathkkb/tf-gke/commit/9f84cec2b7c28863b79d9eb2586be5bad83252b4))
+* make wait-for-cluster more robust ([#676](https://www.github.com/bharathkkb/tf-gke/issues/676)) ([dffb047](https://www.github.com/bharathkkb/tf-gke/commit/dffb04774f81cd0a9e2459c411eb75cde8b705d2))
+* move to using for_each for node pools ([#257](https://www.github.com/bharathkkb/tf-gke/issues/257)) ([7d0c9aa](https://www.github.com/bharathkkb/tf-gke/commit/7d0c9aaa9c815b933ada882f274b9b1293b59716))
+* Promote previously beta features to GA modules ([#709](https://www.github.com/bharathkkb/tf-gke/issues/709)) ([2cb4fae](https://www.github.com/bharathkkb/tf-gke/commit/2cb4fae57cb580daba6dc64c7564dcaa7df4efd6)), closes [#708](https://www.github.com/bharathkkb/tf-gke/issues/708)
+* Support service account impersonation for wait-for-cluster script ([#729](https://www.github.com/bharathkkb/tf-gke/issues/729)) ([75a56f1](https://www.github.com/bharathkkb/tf-gke/commit/75a56f11c8387cdd8cb4cf9e80024af07d34a92f))
+* **ACM:** fix bug when not using `ssh` secret type for ACM submodule ([#679](https://www.github.com/bharathkkb/tf-gke/issues/679)) ([716867c](https://www.github.com/bharathkkb/tf-gke/commit/716867cecbc080674410f9170a0268d193a1da83))
+* Rollout default_max_pods_per_node setting to GA modules ([#439](https://www.github.com/bharathkkb/tf-gke/issues/439)) ([36ddbbb](https://www.github.com/bharathkkb/tf-gke/commit/36ddbbb82d6861689d734e76eeab7c0d162351ce))
+* Tweak formatting in readme.txt ([#410](https://www.github.com/bharathkkb/tf-gke/issues/410)) ([c656a5c](https://www.github.com/bharathkkb/tf-gke/commit/c656a5c4ed66914915bb93960940bd40e2615292))
+* Update fields for ACM and Config Sync to bring them to feature parity ([#635](https://www.github.com/bharathkkb/tf-gke/issues/635)) ([7fc3b48](https://www.github.com/bharathkkb/tf-gke/commit/7fc3b488ed6db60fdc081258146270da4dda7ab9))
+* Update modules to use new kubectl module ([#602](https://www.github.com/bharathkkb/tf-gke/issues/602)) ([794da61](https://www.github.com/bharathkkb/tf-gke/commit/794da61825739bab80cbed486b5e919f79478667))
+
+
+### Bug Fixes
+
+* Add additional guardrails for disabled workload identity. ([#542](https://www.github.com/bharathkkb/tf-gke/issues/542)) ([43c4349](https://www.github.com/bharathkkb/tf-gke/commit/43c4349788d46a1e973254f4efb87366eb873765))
+* Add stackdriver.resourceMetadata.writer role for SA to prevent monitoring errors ([#485](https://www.github.com/bharathkkb/tf-gke/issues/485)) ([07de70b](https://www.github.com/bharathkkb/tf-gke/commit/07de70b0ee3641e6be5e6052a898a9d7eb49a815))
+* Bumped gcloud module to 1.3.0 ([#612](https://www.github.com/bharathkkb/tf-gke/issues/612)) ([4d33759](https://www.github.com/bharathkkb/tf-gke/commit/4d33759bb6e913586f9d0e2705d6eb2fb6c43a23))
+* Change for_each splat syntax on update variants, closes [#414](https://www.github.com/bharathkkb/tf-gke/issues/414) ([#415](https://www.github.com/bharathkkb/tf-gke/issues/415)) ([a20425f](https://www.github.com/bharathkkb/tf-gke/commit/a20425f74b084ef58abb1560662ef1d83f3beee5))
+* change pod_security_policy_config type to list(object()) ([#408](https://www.github.com/bharathkkb/tf-gke/issues/408)) ([a99352a](https://www.github.com/bharathkkb/tf-gke/commit/a99352affaa48b42a653d399685abd1395614685))
+* Compatibility for new asm release with 299.0.0 ([#589](https://www.github.com/bharathkkb/tf-gke/issues/589)) ([a5213c4](https://www.github.com/bharathkkb/tf-gke/commit/a5213c4693dc0494bf70d72d72f875cc318f5fb7))
+* Correct ACM param defaults ([#536](https://www.github.com/bharathkkb/tf-gke/issues/536)) ([0b92d27](https://www.github.com/bharathkkb/tf-gke/commit/0b92d273cc14eb7c7dfe13dbb76e04a33065de04))
+* Correct bug in passing var.zones for safer cluster modules ([#474](https://www.github.com/bharathkkb/tf-gke/issues/474)) ([7660b51](https://www.github.com/bharathkkb/tf-gke/commit/7660b5156a740d59958e472ee2faa1637215bf06))
+* Correct identity namespace output for beta clusters ([#500](https://www.github.com/bharathkkb/tf-gke/issues/500)) ([c783659](https://www.github.com/bharathkkb/tf-gke/commit/c783659bb9922d7f8231ac8ba584a4dc805a8288)), closes [#489](https://www.github.com/bharathkkb/tf-gke/issues/489)
+* Correct WI module source in docs ([#701](https://www.github.com/bharathkkb/tf-gke/issues/701)) ([f31b1f4](https://www.github.com/bharathkkb/tf-gke/commit/f31b1f4b8cd78968c9fbafc48835b14985ecbb26))
+* Enable auto-upgrade in beta clusters with a release channel ([#682](https://www.github.com/bharathkkb/tf-gke/issues/682)) ([21f95db](https://www.github.com/bharathkkb/tf-gke/commit/21f95db0a7737c922224bedf9af255934da5bd6c))
+* Enhance WI module usability with existing KSA ([#557](https://www.github.com/bharathkkb/tf-gke/issues/557)) ([cf3273d](https://www.github.com/bharathkkb/tf-gke/commit/cf3273df8428bfed36db76d54ec90aec022c55d5))
+* Explicitly specify VPC-native clusters for beta modules. ([#598](https://www.github.com/bharathkkb/tf-gke/issues/598)) ([d9f7782](https://www.github.com/bharathkkb/tf-gke/commit/d9f7782235ad43081e745d9d33e7de07b38259d5))
+* fallback to name if location is not set ([#736](https://www.github.com/bharathkkb/tf-gke/issues/736)) ([63d7f5e](https://www.github.com/bharathkkb/tf-gke/commit/63d7f5e7128c9505cc08b9469d6854e9d825ed4b))
+* Fix broken link in README.md ([#691](https://www.github.com/bharathkkb/tf-gke/issues/691)) ([6f0e749](https://www.github.com/bharathkkb/tf-gke/commit/6f0e7494f80af70850e50e35e004516a9e92b85f))
+* Fix CI for Workload Identity ([#460](https://www.github.com/bharathkkb/tf-gke/issues/460)) ([025f8b7](https://www.github.com/bharathkkb/tf-gke/commit/025f8b7eae93651a2c23ef770654782222cd61b7))
+* Fix skip_provisioners enabled flag for wait_for_cluster ([#669](https://www.github.com/bharathkkb/tf-gke/issues/669)) ([e293a43](https://www.github.com/bharathkkb/tf-gke/commit/e293a43d7327d9055fa73aacdf0b977ba0481c48))
+* If release_channel is active, set min_master_version to null ([#412](https://www.github.com/bharathkkb/tf-gke/issues/412)) ([4c7b399](https://www.github.com/bharathkkb/tf-gke/commit/4c7b3997d4e9ef38ef7c7fd629b7a1ff5ca0418e))
+* multiple cluster wait-for-cluster.sh ([#734](https://www.github.com/bharathkkb/tf-gke/issues/734)) ([6682911](https://www.github.com/bharathkkb/tf-gke/commit/66829118db2e1fe946c79d0493bf83ed912b1837))
+* Pin Kubernetes provider to 1.10 ([#432](https://www.github.com/bharathkkb/tf-gke/issues/432)) ([21d09ae](https://www.github.com/bharathkkb/tf-gke/commit/21d09aebb37843e90ac5902c47e0b0439f3924c4))
+* Prevents "Invalid index" when creating private cluster ([#422](https://www.github.com/bharathkkb/tf-gke/issues/422)) ([cc53d1c](https://www.github.com/bharathkkb/tf-gke/commit/cc53d1c5464ed4dfbc1e2c166aeaa93a2f79b561)), closes [#419](https://www.github.com/bharathkkb/tf-gke/issues/419)
+* relax version to allow 0.13 ([#621](https://www.github.com/bharathkkb/tf-gke/issues/621)) ([dd96aa5](https://www.github.com/bharathkkb/tf-gke/commit/dd96aa595090bbd02f6b38fc682ea3de74aca531))
+* remove hub from asm module ([#670](https://www.github.com/bharathkkb/tf-gke/issues/670)) ([6f419c3](https://www.github.com/bharathkkb/tf-gke/commit/6f419c3f048b4cdaa4d954bf9df1fbd87a0749ae))
+* remove quotes from references ([ff92865](https://www.github.com/bharathkkb/tf-gke/commit/ff92865f9ccdbb88eb550e956d19e06e7ace9624))
+* Remove unused variable `service_account` in safer-cluster to avoid confusion ([#448](https://www.github.com/bharathkkb/tf-gke/issues/448)) ([a30e7cd](https://www.github.com/bharathkkb/tf-gke/commit/a30e7cd339f71bbfee5885f12326cf77717daf74))
+* Removed dependency on jq from wait-for-cluster.sh script ([#402](https://www.github.com/bharathkkb/tf-gke/issues/402)) ([d2a5e28](https://www.github.com/bharathkkb/tf-gke/commit/d2a5e28004963062bacc79687ff4fc14826639ee))
+* removing gcloud_skip_download variable ([#712](https://www.github.com/bharathkkb/tf-gke/issues/712)) ([f84e838](https://www.github.com/bharathkkb/tf-gke/commit/f84e838bf8c8d01f8f60176a2b3140800cf3ec3b))
+* Restore gcloud wait_for_cluster ([#568](https://www.github.com/bharathkkb/tf-gke/issues/568)) ([0bcf3ca](https://www.github.com/bharathkkb/tf-gke/commit/0bcf3ca0dfebcdd99084d43eb6833bb7e55ae434))
+* Rolled back to basic path routing for networks ([#434](https://www.github.com/bharathkkb/tf-gke/issues/434)) ([8571f61](https://www.github.com/bharathkkb/tf-gke/commit/8571f61dcd35eb4bd06febea9d14b0ed409b2d0e))
+* set project number for ASM install ([#692](https://www.github.com/bharathkkb/tf-gke/issues/692)) ([c5d1e4d](https://www.github.com/bharathkkb/tf-gke/commit/c5d1e4db2034b4395055322c28abd30248609cba))
+* Shorten GSA account_id if necessary ([#666](https://www.github.com/bharathkkb/tf-gke/issues/666)) ([0225458](https://www.github.com/bharathkkb/tf-gke/commit/02254587d9cf01f138a4096673967402a9ab00fc))
+* Simplified pod security policy interface. ([6069ece](https://www.github.com/bharathkkb/tf-gke/commit/6069ece9cd12acbbba8ff16ab0cbc9b17bc47985))
+* Stop warning about deprecated external references from destroy provisioners. ([#420](https://www.github.com/bharathkkb/tf-gke/issues/420)) ([c8fde26](https://www.github.com/bharathkkb/tf-gke/commit/c8fde26dace1311163bee74fe61e67aa705a2245))
+* Typo in autogen/safer-cluster/README.md ([#596](https://www.github.com/bharathkkb/tf-gke/issues/596)) ([ebdf57d](https://www.github.com/bharathkkb/tf-gke/commit/ebdf57dc178e43799f673e1aaa1dba33aa96bcf5))
+* update and pin kubernetes provider to >= 1.11.1 ([#453](https://www.github.com/bharathkkb/tf-gke/issues/453)) ([418d9b3](https://www.github.com/bharathkkb/tf-gke/commit/418d9b30863ed67638bef87602de3910169e1195))
+* Update auth module to handle empty clusters ([#521](https://www.github.com/bharathkkb/tf-gke/issues/521)) ([dd2afca](https://www.github.com/bharathkkb/tf-gke/commit/dd2afca273e32b37b5bcbd98ad42e4f0b633c43a))
+* Updating the Binary Authorization submodule to allow Terraform 0.13 ([#726](https://www.github.com/bharathkkb/tf-gke/issues/726)) ([df98cf9](https://www.github.com/bharathkkb/tf-gke/commit/df98cf9ade438bd26d7c2182f2e83f0415a24d53))
+* Use gcloud module for ACM submodule, will force reinstall of ACM ([#442](https://www.github.com/bharathkkb/tf-gke/issues/442)) ([9737190](https://www.github.com/bharathkkb/tf-gke/commit/97371905789f34ab8e7cda4cd32e17b36fb661c6)), closes [#454](https://www.github.com/bharathkkb/tf-gke/issues/454)
+* Use gcloud module for scripts, closes [#401](https://www.github.com/bharathkkb/tf-gke/issues/401) ([#404](https://www.github.com/bharathkkb/tf-gke/issues/404)) ([65172de](https://www.github.com/bharathkkb/tf-gke/commit/65172dea06923cb8f2771d06cba5e9ef2547d9da))
+
+
+* Prepare upgrade guide for 7.0 (#407) ([156952d](https://www.github.com/bharathkkb/tf-gke/commit/156952d57e3044711efc7f0a207b494e89b28aa6)), closes [#407](https://www.github.com/bharathkkb/tf-gke/issues/407)
+
 ## [12.0.0](https://www.github.com/terraform-google-modules/terraform-google-kubernetes-engine/compare/v11.1.0...v12.0.0) (2020-10-16)
 
 
