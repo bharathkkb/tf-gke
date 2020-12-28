@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Extending the adopted spec, each change should have a link to its corresponding pull request appended.
 
+## [1.0.0](https://www.github.com/bharathkkb/tf-gke/compare/v0.1.0...v1.0.0) (2020-12-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* foo
+
+### Features
+
+* foo ([d368619](https://www.github.com/bharathkkb/tf-gke/commit/d36861959dcfb9913b7d4d464e24109b50ac1602))
+
 ## 0.1.0 (2020-11-16)
 
 
